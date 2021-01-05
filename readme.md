@@ -21,8 +21,6 @@ baseurl=https://archive.cloudera.com/cdh6/6.3.2/redhat7/yum/
 gpgkey =https://archive.cloudera.com/cdh6/6.3.2/redhat7/yum/RPM-GPG-KEY-cloudera    
 gpgcheck = 1" > /etc/yum.repos.d/cloudera-cdh6.3.2.repo
 ```
-#### 2.配置cdh5镜像源：
-
 *无网络环境或网络环境差的情况下，可以将cdh5镜像源制作成本地镜像源进行安装*
 ## 安装步骤
 #### 1.查看当前HDP版本
