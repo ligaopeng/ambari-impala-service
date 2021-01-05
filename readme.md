@@ -24,3 +24,46 @@ gpgcheck = 1" > /etc/yum.repos.d/cloudera-cdh6.3.2.repo
 #### 2.配置cdh5镜像源：
 
 *无网络环境或网络环境差的情况下，可以将cdh5镜像源制作成本地镜像源进行安装*
+## 安装步骤
+#### 1.查看当前HDP版本
+```shell
+VERSION=`hdp-select status hadoop-client | sed 's/hadoop-client - \([0-9]\.[0-9]\).*/\1/'`
+echo $VERSION
+```
+#### 2.下载并解压release版本插件包
+```shell
+git clone https://github.com/luckes-yang/ambari-impala-service.git /var/lib/ambari-server/resources/stacks/HDP/$VERSION/services/IMPALA
+```
+#### 3.重启ambari-server
+```shell
+ambari-server restart
+```
+#### 4.在ambari web ui进行组件安装
+略
+#### 5.效果截图
+版本效果：<br>
+![版本](images/version.png)
+summary:
+![summary](images/总览.png)
+configuration:
+![configuration](images/配置及快速链接.png)
+
+若无法显示截图，是由于github的图片服务器访问问题，在本地hosts文件中添加如下映射即可
+```shell
+192.30.253.112 Build software better, together
+192.30.253.119 gist.github.com
+151.101.184.133 assets-cdn.github.com
+151.101.184.133 raw.githubusercontent.com
+151.101.184.133 gist.githubusercontent.com
+151.101.184.133 cloud.githubusercontent.com
+151.101.184.133 camo.githubusercontent.com
+151.101.184.133 avatars0.githubusercontent.com
+151.101.184.133 avatars1.githubusercontent.com
+151.101.184.133 avatars2.githubusercontent.com
+151.101.184.133 avatars3.githubusercontent.com
+151.101.184.133 avatars4.githubusercontent.com
+151.101.184.133 avatars5.githubusercontent.com
+151.101.184.133 avatars6.githubusercontent.com
+151.101.184.133 avatars7.githubusercontent.com
+151.101.184.133 avatars8.githubusercontent.com
+```
