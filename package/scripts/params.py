@@ -25,11 +25,12 @@ current_host_name = socket.getfqdn()
 security_enabled = config['configurations']['cluster-env']['security_enabled']
 
 hdfs_host = default("/clusterHostInfo/namenode_hosts", [''])[0]
+if not hdfs_host:
+    hdfs_host = default("/clusterHostInfo/namenode_host", [''])[0]
 hive_host = default("/clusterHostInfo/hive_metastore_host", [''])[0]
 kudu_master_hosts = ",".join(config['clusterHostInfo']['kudu_master_hosts'])
 kudu_master_host_num = len(config['clusterHostInfo']['kudu_master_hosts'])
 
-kudu_master_host = ",".join(default("/clusterHostInfo/kudu_master_host", ['']))
 scp_conf_dir = "/etc/impala/conf"
 scp_conf_from = {
     "hive": {
