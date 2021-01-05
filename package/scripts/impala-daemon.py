@@ -22,8 +22,7 @@ class ImpalaDaemon(ImpalaBase):
         Execute('echo "Running cmd: ' + cmd + '"')
         Execute(cmd)
 
-    @staticmethod
-    def status():
+    def status(self, env):
         check_process_status("/var/run/impala/impalad-impala.pid")
 
 

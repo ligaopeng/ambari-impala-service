@@ -23,8 +23,7 @@ class StateStore(ImpalaBase):
         Execute('echo "Running cmd: ' + cmd + '"')
         Execute(cmd)
 
-    @staticmethod
-    def status():
+    def status(self, env):
         check_process_status("/var/run/impala/statestored-impala.pid")
 
 

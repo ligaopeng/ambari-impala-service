@@ -40,5 +40,5 @@ scp_conf_from = {
         "host": hdfs_host,
         "files": [
             "/etc/hadoop/conf/core-site.xml",
-            "/etc/hadoop/conf/hdfs-site.xml"]},
+            "/etc/hadoop/conf/hdfs-site.xml"]}
 }

@@ -1,6 +1,14 @@
+IMPALA_CATALOG_SERVICE_HOST={{impala_catalog_host}}
+IMPALA_STATE_STORE_HOST={{impala_state_store_host}}
+IMPALA_STATE_STORE_PORT={{impala_env['impala_state_store_port']}}
+IMPALA_BACKEND_PORT={{impala_env['impala_backend_port']}}
+IMPALA_LOG_DIR={{impala_log_dir}}
+IMPALA_SCRATCH_DIR={{impala_env['impala_scratch_dir']}}
+MEM_LIMIT={{impala_env['mem_limit']}}
+
 IMPALA_CATALOG_ARGS=" \
-    -log_dir={{impala_log_dir}} \
-    -state_store_host={{impala_state_store_host}} \
+    -log_dir=${IMPALA_LOG_DIR} \
+    -state_store_host=${IMPALA_STATE_STORE_HOST} \
         {% if security_enabled %}
     -kerberos_reinit_interval={{impala_env['kerberos_reinit_interval']}} \
     -principal=impala/{{current_host_name}}@{{realm_name}} \
@@ -8,8 +16,8 @@ IMPALA_CATALOG_ARGS=" \
         {% endif %}
 	"
 IMPALA_STATE_STORE_ARGS=" \
-    -log_dir={{impala_log_dir}} \
-    -state_store_port={{impala_env['impala_state_store_port']}} \
+    -log_dir=${IMPALA_LOG_DIR} \
+    -state_store_port=${IMPALA_STATE_STORE_PORT} \
 	{% if security_enabled %}
     -kerberos_reinit_interval={{impala_env['kerberos_reinit_interval']}} \
     -principal=impala/{{current_host_name}}@{{realm_name}} \
@@ -17,14 +25,14 @@ IMPALA_STATE_STORE_ARGS=" \
 	{% endif %}
 	"
 IMPALA_SERVER_ARGS=" \
-    -log_dir={{impala_log_dir}} \
-	--scratch_dirs={{impala_env['impala_scratch_dir']}} \
-	-mem_limit={{impala_env['mem_limit']}} \
-    -catalog_service_host={{impala_catalog_host}} \
-    -state_store_port={{impala_env['impala_state_store_port']}} \
+    -log_dir=${IMPALA_LOG_DIR} \
+	--scratch_dirs=${IMPALA_SCRATCH_DIR} \
+	-mem_limit=${MEM_LIMIT} \
+    -catalog_service_host=${IMPALA_CATALOG_SERVICE_HOST} \
+    -state_store_port=${IMPALA_STATE_STORE_PORT} \
     -use_statestore \
-    -state_store_host={{impala_state_store_host}} \
-    -be_port={{impala_env['impala_backend_port']}} \
+    -state_store_host=${IMPALA_STATE_STORE_HOST} \
+    -be_port=${IMPALA_BACKEND_PORT} \
     {% if kudu_master_host_num > 0 %}
     -kudu_master_hosts={{kudu_master_hosts}} \
     {% endif %}
