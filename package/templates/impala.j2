@@ -1,0 +1,39 @@
+IMPALA_CATALOG_ARGS=" \
+    -log_dir={{impala_log_dir}} \
+    -state_store_host={{impala_state_store_host}} \
+        {% if security_enabled %}
+    -kerberos_reinit_interval={{impala_env['kerberos_reinit_interval']}} \
+    -principal=impala/{{current_host_name}}@{{realm_name}} \
+    -keytab_file=/etc/security/keytabs/impala.service.keytab \
+        {% endif %}
+	"
+IMPALA_STATE_STORE_ARGS=" \
+    -log_dir={{impala_log_dir}} \
+    -state_store_port={{impala_env['impala_state_store_port']}} \
+	{% if security_enabled %}
+    -kerberos_reinit_interval={{impala_env['kerberos_reinit_interval']}} \
+    -principal=impala/{{current_host_name}}@{{realm_name}} \
+    -keytab_file=/etc/security/keytabs/impala.service.keytab \
+	{% endif %}
+	"
+IMPALA_SERVER_ARGS=" \
+    -log_dir={{impala_log_dir}} \
+	--scratch_dirs={{impala_env['impala_scratch_dir']}} \
+	-mem_limit={{impala_env['mem_limit']}} \
+    -catalog_service_host={{impala_catalog_host}} \
+    -state_store_port={{impala_env['impala_state_store_port']}} \
+    -use_statestore \
+    -state_store_host={{impala_state_store_host}} \
+    -be_port={{impala_env['impala_backend_port']}} \
+    {% if kudu_master_host_num > 0 %}
+    -kudu_master_hosts={{kudu_master_hosts}} \
+    {% endif %}
+	{% if security_enabled %}
+    -kerberos_reinit_interval={{impala_env['kerberos_reinit_interval']}} \
+    -principal=impala/{{current_host_name}}@{{realm_name}} \
+    -keytab_file=/etc/security/keytabs/impala.service.keytab \
+	{% endif %}
+	"
+
+ENABLE_CORE_DUMPS=true
+LIBHDFS_OPTS=-Djava.library.path=/usr/lib/impala/lib
