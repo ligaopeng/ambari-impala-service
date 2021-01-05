@@ -36,9 +36,29 @@ git clone https://github.com/luckes-yang/ambari-impala-service.git /var/lib/amba
 ```shell
 ambari-server restart
 ```
-#### 4.在ambari web ui进行组件安装
+#### 4.修改配置
+* hdfs-site.xml
+```xml
+<property>
+    <name>dfs.client.read.shortcircuit</name>
+    <value>true</value>
+</property>
+<property>
+    <name>dfs.domain.socket.path</name>
+    <value>/var/run/hdfs-sockets/dn</value>
+</property>
+<property>
+    <name>dfs.client.file-block-storage-locations.timeout.millis</name>
+    <value>10000</value>
+</property>
+<property>
+    <name>dfs.datanode.hdfs-blocks-metadata.enabled</name>
+    <value>true</value>
+</property>
+```
+#### 5.在ambari web ui进行组件安装
 略
-#### 5.效果截图
+#### 6.效果截图
 版本效果：<br>
 ![版本](images/version.png)
 summary:
