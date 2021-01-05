@@ -14,7 +14,7 @@
     </property>
     <property>
         <name>kudu_master_hosts</name>
-        <value>localhost:7051</value>
+        <value>master:7051</value>
         <description>config the kudu master hosts</description>
     </property>
     <property>
