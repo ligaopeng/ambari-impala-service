@@ -10,6 +10,9 @@ class ImpalaBase(Script):
         'impala-shell']
 
     def install_impala(self, env):
+        cmd = 'useradd impala'
+        Execute('echo "Running cmd: ' + cmd + '"')
+        Execute(cmd, ignore_failures=True)
         self.install_packages(env)
         if self.impala_packages is not None and len(self.impala_packages):
             for pack in self.impala_packages:
