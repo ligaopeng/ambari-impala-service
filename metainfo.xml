@@ -54,6 +54,9 @@
             </requiredServices>
             <configuration-dependencies>
                 <config-type>impala-env</config-type>
+                <config-type>core-site</config-type>
+                <config-type>hdfs-site</config-type>
+                <config-type>hive-site</config-type>
             </configuration-dependencies>
             <quickLinksConfigurations>
                 <quickLinksConfiguration>
