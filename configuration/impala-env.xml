@@ -13,9 +13,19 @@
         <description>impala scratch dir</description>
     </property>
     <property>
-        <name>kudu_master_hosts</name>
-        <value>master:7051</value>
-        <description>config the kudu master hosts</description>
+        <name>impala_state_store_port</name>
+        <value>24000</value>
+        <description>IMPALA_STATE_STORE_PORT</description>
+    </property>
+    <property>
+        <name>impala_backend_port</name>
+        <value>22000</value>
+        <description>IMPALA_BACKEND_PORT</description>
+    </property>
+    <property>
+        <name>kerberos_reinit_interval</name>
+        <value>60</value>
+        <description>kerberos_reinit_interval</description>
     </property>
     <property>
         <name>mem_limit</name>
