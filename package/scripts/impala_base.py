@@ -20,18 +20,8 @@ class ImpalaBase(Script):
         import params
         env.set_params(params)
 
-        script_dir = params.files_dir
-        datalake_jar = None
-        for dir in os.listdir(script_dir):
-            if dir.startswith('hadoop-azure-datalake') and dir.endswith(".jar"):
-                datalake_jar = dir
-        if datalake_jar is None:
-            raise Exception("Couldn't find hadoop-azure-datalake-*.jar in " + script_dir)
-        File(
-            "/usr/lib/impala/lib/"+datalake_jar,
-            content=StaticFile(os.path.join(script_dir, datalake_jar)), mode=0o644)
         File(format("{tmp_dir}/impala_init_lib.sh"),
-             content=Template('init_lib.sh.j2', datalakeJar=datalake_jar), mode=0o700)
+             content=Template('init_lib.sh.j2'), mode=0o700)
         Execute(format("bash {tmp_dir}/impala_init_lib.sh"))
 
     def configure_impala(self, env):
