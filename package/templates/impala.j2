@@ -9,11 +9,17 @@ MEM_LIMIT={{impala_env['mem_limit']}}
 IMPALA_CATALOG_ARGS=" \
     -log_dir=${IMPALA_LOG_DIR} \
     -state_store_host=${IMPALA_STATE_STORE_HOST} \
-        {% if security_enabled %}
+    {% if enable_ranger %}
+    -server_name=cluster_impala \
+    -ranger_service_type=hive \
+    -ranger_app_id=impala \
+    -authorization_provider=ranger \
+    {% endif %}
+    {% if security_enabled %}
     -kerberos_reinit_interval={{impala_env['kerberos_reinit_interval']}} \
     -principal=impala/{{current_host_name}}@{{realm_name}} \
     -keytab_file=/etc/security/keytabs/impala.service.keytab \
-        {% endif %}
+    {% endif %}
 	"
 IMPALA_STATE_STORE_ARGS=" \
     -log_dir=${IMPALA_LOG_DIR} \
@@ -33,6 +39,12 @@ IMPALA_SERVER_ARGS=" \
     -use_statestore \
     -state_store_host=${IMPALA_STATE_STORE_HOST} \
     -be_port=${IMPALA_BACKEND_PORT} \
+    {% if enable_ranger %}
+    -server_name=impala_cluster \
+    -ranger_service_type=hive \
+    -ranger_app_id=impala \
+    -authorization_provider=ranger \
+    {% endif %}
     {% if kudu_master_host_num > 0 %}
     -kudu_master_hosts={{kudu_master_hosts}} \
     {% endif %}
