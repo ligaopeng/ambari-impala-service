@@ -8,6 +8,11 @@
         <description>impala Log dir</description>
     </property>
     <property>
+        <name>enable_ranger</name>
+        <value>false</value>
+        <description>disable or enable ranger</description>
+    </property>
+    <property>
         <name>impala_scratch_dir</name>
         <value>/tmp/impala_scratch</value>
         <description>impala scratch dir</description>
