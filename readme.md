@@ -1,7 +1,16 @@
 ambari集成impala组件
 ===
 ## 实现目标
-当前最新ambari版本2.6.5.0及HDP3.1.5.0已不再发布维护和更新，由cloudera公司发布的CDP替代，CDP属于收费项目，因此推出基于ambari服务管理平台的impala服务组件。
+当前最新ambari版本2.7.5.0及HDP3.1.5.0已不再发布维护和更新，由cloudera公司发布的CDP替代，CDP属于收费项目，因此推出基于ambari服务管理平台的impala服务组件。
+本项目测试使用的ambari的版本为2.7.3和HDP3.1.4
+
+http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.4.0/ambari-2.7.4.0-centos7.tar.gz
+
+http://public-repo-1.hortonworks.com/HDP/centos7/3.x/updates/3.1.4.0/HDP-3.1.4.0-centos7-rpm.tar.gz
+
+http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/centos7/HDP-UTILS-1.1.0.22-centos7.tar.gz
+
+
 ## 关联项目
 * [CDH KUDU on ambari](https://github.com/luckes-yang/ambari-kudu-service)
 ## 安装前准备
@@ -155,6 +164,100 @@ chmod -R 775 /var/run/hdfs-sockets/
 </property>
 ```
 
+安装过程有可能报错
+
+中间发生一次报错信息：
+
+Traceback (most recent call last):
+  File "/var/lib/ambari-agent/cache/stack-hooks/before-ANY/scripts/hook.py", line 38, in <module>
+    BeforeAnyHook().execute()
+  File "/usr/lib/ambari-agent/lib/resource_management/libraries/script/script.py", line 352, in execute
+    method(env)
+  File "/var/lib/ambari-agent/cache/stack-hooks/before-ANY/scripts/hook.py", line 31, in hook
+    setup_users()
+  File "/var/lib/ambari-agent/cache/stack-hooks/before-ANY/scripts/shared_initialization.py", line 50, in setup_users
+    groups = params.user_to_groups_dict[user],
+KeyError: u'impala'
+Error: Error: Unable to run the custom hook script ['/usr/bin/python', '/var/lib/ambari-agent/cache/stack-hooks/before-ANY/scripts/hook.py', 'ANY', '/var/lib/ambari-agent/data/command-863.json', '/
+
+解决
+```shell
+# cd /var/lib/ambari-server/resources/scripts
+# python configs.py -u admin -p admin -n $cluster_name -l $ambari_server -t 8080 -a get -c cluster-env |grep -i ignore_groupsusers_create
+
+"ignore_groupsusers_create": "false",
+
+# python configs.py -u admin -p admin -n $cluster_name -l $ambari_server -t 8080 -a set -c cluster-env -k ignore_groupsusers_create -v true
+详细参数详见
+# python configs.py --help
+```
+
+如果遇见impala-server没有启动，statestore registration unsuccessful: Couldn't open transport for localhost:24000 (connect() failed: Connection refused
+
+vim /etc/default/impala
+删除 -use_statestore
 
 
+报错
+```shell
+cat /var/log/impala/impalad.ERROR
 
+hdfsBuilderConnect(forceNewInstance=0, nn=default, port=0, kerbTicketCachePath=(NULL), userName=(NULL)) error:
+ClassNotFoundException: com.ctc.wstx.io.InputBootstrapperjava.lang.NoClassDefFoundError: com/ctc/wstx/io/InputBootstrapper
+Caused by: java.lang.ClassNotFoundException: com.ctc.wstx.io.InputBootstrapper
+    at java.net.URLClassLoader.findClass(URLClassLoader.java:382)
+    at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+    at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+    at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+Wrote minidump to /var/log/impala/minidumps/impalad/0a803f89-a804-4bb4-242e02b9-94eba9b1.dmp
+```
+
+把hbase的jar包拷贝到 /usr/lib/impala/lib 并创建软连接
+
+这里注意根据安装的impala的版本对应的cdh的版本选择对应的hbase的版本，否则可能出现版本不兼容的问题
+
+https://archive.cloudera.com/cdh6/6.3.2/redhat7/yum/RPMS/
+
+解压rpm
+
+```shell
+mkdir /data0/impala_jar/
+
+rpm2cpio hadoop-3.0.0+cdh6.3.2-1605554.el7.x86_64.rpm | cpio -div
+rpm2cpio hadoop-yarn-3.0.0+cdh6.3.2-1605554.el7.x86_64.rpm | cpio -div
+rpm2cpio hadoop-hdfs-3.0.0+cdh6.3.2-1605554.el7.x86_64.rpm | cpio -div
+rpm2cpio hadoop-mapreduce-3.0.0+cdh6.3.2-1605554.el7.x86_64.rpm | cpio -div
+rpm2cpio hadoop-client-3.0.0+cdh6.3.2-1605554.el7.x86_64.rpm| cpio -div
+rpm2cpio zookeeper-3.4.5+cdh6.3.2-1605554.el7.x86_64.rpm| cpio -div
+rpm2cpio hive-2.1.1+cdh6.3.2-1605554.el7.noarch.rpm| cpio -div
+rpm2cpio hive-hcatalog-2.1.1+cdh6.3.2-1605554.el7.noarch.rpm| cpio -div
+rpm2cpio hive-metastore-2.1.1+cdh6.3.2-1605554.el7.noarch.rpm| cpio -div
+rpm2cpio hive-jdbc-2.1.1+cdh6.3.2-1605554.el7.noarch.rpm| cpio -div
+```
+
+```shell
+ln -s hbase-annotations-1.2.0-cdh5.11.0.jar hbase-annotations.jar
+ln -s hbase-client-1.2.0-cdh5.11.0.jar hbase-client.jar
+ln -s hbase-common-1.2.0-cdh5.11.0.jar hbase-common.jar
+ln -s hbase-examples-1.2.0-cdh5.11.0.jar hbase-examples.jar
+ln -s hbase-external-blockcache-1.2.0-cdh5.11.0.jar hbase-external-blockcache.jar
+ln -s hbase-hadoop2-compat-1.2.0-cdh5.11.0.jar hbase-hadoop2-compat.jar
+ln -s hbase-hadoop-compat-1.2.0-cdh5.11.0.jar hbase-hadoop-compat.jar
+ln -s hbase-it-1.2.0-cdh5.11.0.jar hbase-it.jar
+ln -s hbase-prefix-tree-1.2.0-cdh5.11.0.jar hbase-prefix-tree.jar
+ln -s hbase-procedure-1.2.0-cdh5.11.0.jar hbase-procedure.jar
+ln -s hbase-protocol-1.2.0-cdh5.11.0.jar hbase-protocol.jar
+ln -s hbase-resource-bundle-1.2.0-cdh5.11.0.jar hbase-resource-bundle.jar
+ln -s hbase-rest-1.2.0-cdh5.11.0.jar hbase-rest.jar
+ln -s hbase-rsgroup-1.2.0-cdh5.11.0.jar hbase-rsgroup.jar
+ln -s hbase-server-1.2.0-cdh5.11.0.jar hbase-server.jar
+ln -s hbase-shell-1.2.0-cdh5.11.0.jar hbase-shell.jar
+ln -s hbase-spark-1.2.0-cdh5.11.0.jar hbase-spark.jar
+```
+
+![1](images/WechatIMG16.jpeg)
+![2](images/WechatIMG17.jpeg)
+![3](images/WechatIMG18.jpeg)
+![4](images/WechatIMG19.jpeg)
+![5](images/WechatIMG20.jpeg)
+![6](images/WechatIMG21.jpeg)
