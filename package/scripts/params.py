@@ -6,7 +6,6 @@ from resource_management import *
 from resource_management.libraries.script.script import Script
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
-files_dir = os.path.join(os.path.dirname(script_dir), 'files')
 
 config = Script.get_config()
 tmp_dir = Script.get_tmp_dir()
