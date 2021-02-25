@@ -4,15 +4,21 @@ ambari集成impala组件
 当前最新ambari版本2.7.5.0及HDP3.1.5.0已不再发布维护和更新，由cloudera公司发布的CDP替代，CDP属于收费项目，因此推出基于ambari服务管理平台的impala服务组件。
 本项目测试使用的ambari的版本为2.7.3和HDP3.1.4
 
-http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.4.0/ambari-2.7.4.0-centos7.tar.gz
+https://archive.cloudera.com/p/cdh6/6.3.2
 
-http://public-repo-1.hortonworks.com/HDP/centos7/3.x/updates/3.1.4.0/HDP-3.1.4.0-centos7-rpm.tar.gz
+https://archive.cloudera.com/p/ambari/2.x/2.7.4.0/centos7/ambari-2.7.4.0-centos7.tar.gz
 
-http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/centos7/HDP-UTILS-1.1.0.22-centos7.tar.gz
+
+https://archive.cloudera.com/p/HDP/3.x/3.1.4.0/centos7/HDP-3.1.4.0-centos7-rpm.tar.gz
+
+https://archive.cloudera.com/p/HDP-GPL/3.x/3.1.4.0/centos7/HDP-GPL-3.1.4.0-centos7-gpl.tar.gz
+
+
+https://archive.cloudera.com/p/HDP-UTILS/1.1.0.22/repos/centos7/HDP-UTILS-1.1.0.22-centos7.tar.gz
 
 
 ## 关联项目
-* [CDH KUDU on ambari](https://github.com/luckes-yang/ambari-kudu-service)
+* [CDH KUDU on ambari](https://github.com/ligaopeng/ambari-kudu-service)
 ## 安装前准备
 #### 1.配置cdh6镜像源：
 
@@ -42,7 +48,9 @@ gpgkey=http://jq1:8099/cdh6/yum/RPM-GPG-KEY-cloudera
 enabled=1
 priority=1
 autorefresh=0
+
 ```
+
 本地源所需rpm文件,下载地址为https://archive.cloudera.com/cdh6/6.3.2/redhat7/yum/
 
 ```shell
@@ -147,14 +155,6 @@ chmod -R 775 /var/run/hdfs-sockets/
 </property>
 ```
 
-* core-site.xml
-```xml
-<property>
-    <name>dfs.client.read.shortcircuit.skip.checksum</name>
-    <value>false</value>
-</property>
-
-```
 
 * hive-site.xml
 ```xml
@@ -256,8 +256,13 @@ ln -s hbase-spark-1.2.0-cdh5.11.0.jar hbase-spark.jar
 ```
 
 ![1](images/WechatIMG16.jpeg)
+
 ![2](images/WechatIMG17.jpeg)
+
 ![3](images/WechatIMG18.jpeg)
+
 ![4](images/WechatIMG19.jpeg)
+
 ![5](images/WechatIMG20.jpeg)
+
 ![6](images/WechatIMG21.jpeg)
