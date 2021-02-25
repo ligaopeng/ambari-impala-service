@@ -33,12 +33,10 @@ kudu_master_host_num = len(config['clusterHostInfo']['kudu_master_hosts'])
 
 scp_conf_dir = "/etc/impala/conf"
 scp_conf_from = {
-    "hive": {
-        "host": hive_host,
-        "files": ["/etc/hive/conf/hive-site.xml"]},
     "hdfs": {
         "host": hdfs_host,
         "files": [
             "/etc/hadoop/conf/core-site.xml",
-            "/etc/hadoop/conf/hdfs-site.xml"]}
+            "/etc/hadoop/conf/hdfs-site.xml"
+            "/etc/hive/conf/hive-site.xml"]}
 }
