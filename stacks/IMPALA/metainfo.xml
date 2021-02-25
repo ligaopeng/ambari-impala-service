@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<metainfo>
+    <schemaVersion>2.0</schemaVersion>
+    <services>
+        <service>
+            <name>IMPALA</name>
+            <extends>common-services/IMPALA/3.2.0</extends>
+        </service>
+    </services>
+</metainfo>
